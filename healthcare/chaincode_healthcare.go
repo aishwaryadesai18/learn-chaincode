@@ -20,6 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"encoding/json"
+	"strings"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
@@ -31,19 +32,21 @@ type SimpleChaincode struct {
 // Structure of Patient Details : Custom block
 
 type Patient struct {
-	Id    				string  `json:"Id"`
-	Name         			string  `json:"Name"`
-	Ailment 			string  `json:"Ailment"`
-	DateOfBirth 			string  `json:"DateOfBirth"`
-	NameOfLab       		string  `json:"NameOfLab"`
-	ReportType 			string  `json:"ReportType"`
-	Date				string  `json:"Date"`
-	Impression 			string  `json:"Impression"`
-	Finding 			string  `json:"Finding"`
-	Disease 			string  `json:"Disease"`
-	OnGoingMedication 		string  `json:"OnGoingMedication"`
-	Duration 			string  `json:"Duration"`
-	CurrentProblemDescription	string  `json:"CurrentProblemDescription"`
+	Username    							string  `json:"Username"`
+	Name         							string  `json:"Name"`
+	DescriptionOfCurrentAilment 			string  `json:"DescriptionOfCurrentAilment"`
+	DateOfBirth 							string  `json:"DateOfBirth"`
+	ReportType 								string  `json:"ReportType"`
+	PreLunch								string  `json:"PreLunch"`
+	PostLunch								string  `json:"PostLunch"`
+	MinSize									string  `json:"MinSize"`
+	MaxSize 								string  `json:"MaxSize"`	
+	Disease 								string  `json:"Disease"`
+	OnGoingMedication 						string  `json:"OnGoingMedication"`
+	Duration 								string  `json:"Duration"`
+	Titanus 								string  `json:"Titanus"`
+	HepatitisA 								string  `json:"HepatitisA"`
+	HepatitisB 								string  `json:"HepatitisB"`
 }
 
 func main() {
@@ -98,6 +101,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 // write - invoke function to write key/value pair
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var err error
+	var rtype string
 	fmt.Println("running write()")
 
 	if len(args) != 13 {
@@ -106,19 +110,27 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 
 	m_patient := &Patient{}
 
-	m_patient.Id 				= args[0]
-	m_patient.Name 				= args[1]
-	m_patient.Ailment			= args[2]
-	m_patient.DateOfBirth			= args[3]
-	m_patient.NameOfLab			= args[4]
-	m_patient.ReportType			= args[5]
-	m_patient.Date				= args[6]
-	m_patient.Impression			= args[7]
-	m_patient.Finding			= args[8]
-	m_patient.Disease			= args[9]
-	m_patient.OnGoingMedication		= args[10]
-	m_patient.Duration			= args[11]
-	m_patient.CurrentProblemDescription	= args[12]
+	m_patient.Username 								= args[0]
+	m_patient.Name 									= args[1]
+	m_patient.DescriptionOfCurrentAilment			= args[2]
+	m_patient.DateOfBirth							= args[3]
+	rtype=args[4]
+	if(strings.ToLower(rtype)=="diabetes"){
+		m_patient.ReportType			= args[4]
+		m_patient.PreLunch				= args[5]
+		m_patient.PostLunch				= args[6]
+	}else if(strings.ToLower(rtype)=="kidney"){
+		m_patient.ReportType			= args[4]
+		m_patient.MinSize				= args[5]
+		m_patient.MaxSize				= args[6]		
+	}
+
+	m_patient.Disease				= args[7]
+	m_patient.OnGoingMedication		= args[8]
+	m_patient.Duration				= args[9]
+	m_patient.Titanus				= args[10]		
+	m_patient.HepatitisA			= args[11]
+	m_patient.HepatitisB			= args[12]
 
 
 	var key = args[0] //rename for funsies
