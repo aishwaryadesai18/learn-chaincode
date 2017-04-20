@@ -36,6 +36,7 @@ type Patient struct {
 	Name         							string  `json:"Name"`
 	DescriptionOfCurrentAilment 			string  `json:"DescriptionOfCurrentAilment"`
 	DateOfBirth 							string  `json:"DateOfBirth"`
+	Gender 									string  `json:"Gender"`
 	ReportType 								string  `json:"ReportType"`
 	PreLunch								string  `json:"PreLunch"`
 	PostLunch								string  `json:"PostLunch"`
@@ -104,7 +105,7 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 	var rtype string
 	fmt.Println("running write()")
 
-	if len(args) != 13 {
+	if len(args) != 14 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
 	}
 
@@ -114,26 +115,27 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 	m_patient.Name 									= args[1]
 	m_patient.DescriptionOfCurrentAilment			= args[2]
 	m_patient.DateOfBirth							= args[3]
-	rtype=args[4]
+	m_patient.Gender							= args[4]
+	rtype=args[5]
 	if(strings.ToLower(rtype)=="diabetes"){
-		m_patient.ReportType			= args[4]
-		m_patient.PreLunch				= args[5]
-		m_patient.PostLunch				= args[6]
+		m_patient.ReportType			= args[6]
+		m_patient.PreLunch				= args[7]
+		m_patient.PostLunch				= args[8]
 	}else if(strings.ToLower(rtype)=="kidney"){
-		m_patient.ReportType			= args[4]
-		m_patient.MinSize				= args[5]
-		m_patient.MaxSize				= args[6]		
+		m_patient.ReportType			= args[5]
+		m_patient.MinSize				= args[6]
+		m_patient.MaxSize				= args[7]		
 	}
 
-	m_patient.Disease				= args[7]
-	m_patient.OnGoingMedication		= args[8]
-	m_patient.Duration				= args[9]
-	m_patient.Titanus				= args[10]		
-	m_patient.HepatitisA			= args[11]
-	m_patient.HepatitisB			= args[12]
+	m_patient.Disease				= args[8]
+	m_patient.OnGoingMedication		= args[9]
+	m_patient.Duration				= args[10]
+	m_patient.Titanus				= args[11]		
+	m_patient.HepatitisA			= args[12]
+	m_patient.HepatitisB			= args[13]
 
 
-	var key = args[0] //rename for funsies
+	var key = args[0] 
 
 	value, err := json.Marshal(&m_patient)
 
